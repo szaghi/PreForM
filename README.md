@@ -33,12 +33,12 @@ To be written.
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
 + Support for cpp preprocessing directives:
-  [+] `#ifdef-#else-#endif`;
-  [ ] `#ifndef-#else-#endif`;
-  [ ] `#if-#elif-#else-#endif`;
-  [+] `#define`;
-  [+] `#undef`;
-  [ ] `#include`;
+  * [x] `#ifdef-#else-#endif`;
+  * [ ] `#ifndef-#else-#endif`;
+  * [ ] `#if-#elif-#else-#endif`;
+  * [x] `#define`;
+  * [x] `#undef`;
+  * [ ] `#include`;
 + Pythonic Templating System;
 + ...
 
