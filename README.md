@@ -14,6 +14,8 @@ A very simple and stupid preprocessor for modern Fortran projects.
 * [Getting Help](#help)
 * [Copyrights](#copyrights)
 * [Usage](#usage)
+    + [Preprocess a file on-the-fly to stdout](#preprocess-fly)
+    + [Preprocess a file and save result to a file](#preprocess-tofile)
 * [Examples](#examples)
 * [Tips for non pythonic users](#tips)
 * [Version History](#versions)
@@ -26,20 +28,88 @@ A very simple and stupid preprocessor for modern Fortran projects.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="why"></a>Why?
-To be written.
+The Fortran programming language has not its own pre-processor neither it has a standard pre-processing syntax. Consequently, Fortran developers must rely on external pre-processor tool. However, the pre-processors focused on Fortran language are very fews: PreForM.py is just anther Pythonic pre-processor designed with only main target, the _Fortran poor-men_. It is designed to be very simple, but flexible enough to constitute a _template system_ for Fortran developers. Moreover, to facilitate the migration from other pre-processors, PreForM.py support many _cpp_ pre-processing directives.
+
 ### <a name="cpp"></a>Why not use cpp?
-To be written.
+As a matter of fact, many Fortran developers use _cpp_, the C pre-processor, being one of the most diffused and standardised pre-processor. _cpp_ is a great pre-processor, but is basically a _macro processor_, meaning that it is quite focused on _macroexpansion/substitution/evaluation_. _cpp_ has some limitations that makes complex using it as a template system. Let us suppose we want to write a generic interface as the following:
+
+```fortran
+...
+interface foo
+  module procedure foo1,foo2,foo3
+endinterface
+contains
+  function foo1(in) result(out)
+  type(first), intent(IN):: in
+  logical:: out
+  out = in%logical_test()
+  endfunction foo1
+
+  function foo2(in) result(out)
+  type(second), intent(IN):: in
+  logical:: out
+  out = in%logical_test()
+  endfunction foo2
+
+  function foo3(in) result(out)
+  type(third), intent(IN):: in
+  logical:: out
+  out = in%logical_test()
+  endfunction foo3
+...
+```
+Writing a _macro_ in _cpp_ syntax to _generalize_ such a generic interface implementation is quite impossible. On the contrary, using PreForM.py as a template system the implementation becomes very simple and elegant:
+```fortran
+...
+interface foo
+  #PFM for i in [1,2,3]:
+  module procedure foo1,foo2,foo3
+  #PFM endfor
+endinterface
+contains
+  #PFM for i in [1,2,3] and t in [first,second,third]:
+  function foo$i(in) result(out)
+  type($t), intent(IN):: in
+  logical:: out
+  out = in%logical_test()
+  endfunction foo$i
+  #PFM endfor
+```
+
+PreForM.py is just a pre-processor for Fortran poor-men supporting a sub-set of _cpp_ directives, but overtaking some of _cpp_ limitations making PreForM.py similar to a template system. 
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
-+ Support for cpp preprocessing directives:
-  * [x] `#ifdef-#else-#endif`;
-  * [ ] `#ifndef-#else-#endif`;
-  * [ ] `#if-#elif-#else-#endif`;
-  * [x] `#define`;
-  * [x] `#undef`;
-  * [ ] `#include`;
-+ Pythonic Templating System;
++ Support for `cpp` preprocessing directives:
+  + conditionals:
+      + operators (also nested):
+        * [x] `defined MACRO` or `defined(MACRO)`;
+        * [x] `EXPRESSION || EXPRESSION` (logic or);
+        * [x] `EXPRESSION && EXPRESSION` (logic and);
+    * [x] `#if EXPRESSION`;
+    * [x] `#elif EXPRESSION`;
+    * [x] `#ifdef MACRO`;
+    * [x] `#ifndef MACRO`;
+    * [x] `#else`;
+    * [x] `#endif`;
+  + macros:
+    + standard predefined macros:
+      * [x] `__FILE__`;
+      * [x] `__LINE__`;
+      * [x] `__DATE__`;
+      * [x] `__TIME__`;
+    * [x] expansion;
+    * [ ] stringification;
+    * [ ] concatenation;
+    * [ ] variadic macros;
+    + object-like macros:
+      * [x] `#define MACRO [VALUE]`, VALUE is optional;
+    + function-like macros:
+      * [ ] `#define FUNCTION FUNCTION_DEFINITION`;
+    * [x] `#undef`;
+  + [x] `#include`;
++ Pythonic Templating System:
+  * [ ] loop control;
 + ...
 
 Go to [Top](#top) or [Toc](#toc)
@@ -82,7 +152,7 @@ PreForM.py -h
 ```
 This will echo:
 ```bash
-usage: PreForM.py [-h] [-v] [-o OUTPUT] [-D D [D ...]] input
+usage: PreForM.py [-h] [-v] [-o OUTPUT] [-D D [D ...]] [-lm] input
 
 PreForM.py, Preprocessor for Fortran poor Men
 
@@ -94,9 +164,21 @@ optional arguments:
   -v, --version         Show version
   -o OUTPUT, --output OUTPUT
                         Output file name of preprocessed source
-  -D D [D ...]          List of defined macros in the form NAME1=VALUE1
+  -D D [D ...]          Define a list of macros in the form NAME1=VALUE1
                         NAME2=VALUE2...
+  -lm, --list-macros    Print the list of macros state as the last parsed line
+                        left it
 ```
+### <a name="preprocess-fly"></a>Preprocess a file on-the-fly to stdout
+```bash
+PreForM.py my_file_to_be_preprocessed.my_extension
+```
+This will echoed to stdout the result of pre-processing the input file.
+### <a name="preprocess-tofile"></a>Preprocess a file and save result to a file
+```bash
+PreForM.py my_file_to_be_preprocessed.my_extension -o my_result_file
+```
+This will save into `my_result_file` the result of pre-processing the input file.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="examples"></a>Examples
@@ -112,6 +194,9 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
+### 0.0.2 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/0.0.2.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/0.0.2.tar.gz) one
+_Quasi_ stable API, with many _cpp_ directives supported. Fully backward compatible.
 ### 0.0.1 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/0.0.1.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/0.0.1.tar.gz) one
 Very first, totally UNSTABLE release. Implement only few cpp directives.
