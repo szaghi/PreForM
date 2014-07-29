@@ -37,7 +37,7 @@ cliparser.add_argument('-D',                 required=False,action='store',     
 cliparser.add_argument('-lm','--list-macros',required=False,action='store_true',          default=False,help='Print the list of macros state as the last parsed line left it')
 #regular expressions
 name = r"(?P<name>[a-zA-Z][a-zA-Z0-9_]*)"
-macro = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*(|\(.*\)))"
+macro = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*(|\(.*?\)))"
 expr = r"(?P<expr>.*)"
 regex_function = re.compile(name+r"\("+expr+r"\).*")
 # cpp directives
@@ -121,6 +121,10 @@ class Macros(object):
                   # substituting first variables names
                   expr = v
                   for var,vname in enumerate(vnames):
+                    # stringification
+                    if '#' in expr:
+                      for match in re.finditer('#'+vname,expr):
+                        expr = re.sub('#'+vname,'"'+vname+'"',expr)
                     expr = expr.replace(vname,avnames[var])
                   # substituting leftmost match
                   expression = re.sub(regex_function,expr,expression)

@@ -60,6 +60,10 @@ y = 1.
 z = 2.
 x = FRAC(y,z)
 print*,'x = ',x,' if it is 0.5 complex function-like macros work!'
+
+#define MYWARN(COND) if (COND) print*,' Stringification of '//#COND//' works!'
+MYWARN(x<2.0)
+
 contains
   subroutine first
     print*,'I am the First!'
