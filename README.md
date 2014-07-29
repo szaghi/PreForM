@@ -99,7 +99,7 @@ Go to [Top](#top) or [Toc](#toc)
       * [x] `__DATE__`;
       * [x] `__TIME__`;
     * [x] expansion;
-    * [ ] stringification;
+    * [x] stringification;
     * [ ] concatenation;
     * [ ] variadic macros;
     + object-like macros:
