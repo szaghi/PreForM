@@ -105,11 +105,11 @@ Go to [Top](#top) or [Toc](#toc)
     + object-like macros:
       * [x] `#define MACRO [VALUE]`, VALUE is optional;
     + function-like macros:
-      * [ ] `#define FUNCTION FUNCTION_DEFINITION`;
+      * [x] `#define FUNCTION FUNCTION_DEFINITION`;
     * [x] `#undef`;
   + [x] `#include`;
 + Pythonic Templating System:
-  * [ ] loop control;
+  * [ ] `#PFM for EXPRESSION` loop control;
 + ...
 
 Go to [Top](#top) or [Toc](#toc)

@@ -36,10 +36,12 @@ cliparser.add_argument('-o','--output',      required=False,action='store',     
 cliparser.add_argument('-D',                 required=False,action='store',     nargs='+',default=[],   help='Define a list of macros in the form NAME1=VALUE1 NAME2=VALUE2...')
 cliparser.add_argument('-lm','--list-macros',required=False,action='store_true',          default=False,help='Print the list of macros state as the last parsed line left it')
 #regular expressions
-macro = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*)"
+name = r"(?P<name>[a-zA-Z][a-zA-Z0-9_]*)"
+macro = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*(|\(.*\)))"
 expr = r"(?P<expr>.*)"
+regex_function = re.compile(name+r"\("+expr+r"\).*")
 # cpp directives
-regex_cpp_define  = re.compile(r"(?P<cpp_define>#[Dd][Ee][Ff][Ii][Nn][Ee])\s+"+macro+expr)
+regex_cpp_define  = re.compile(r"(?P<cpp_define>#[Dd][Ee][Ff][Ii][Nn][Ee])\s+"+macro+r"\s+"+expr)
 regex_cpp_undef   = re.compile(r"(?P<cpp_undef>#[Uu][Nn][Dd][Ee][Ff])\s+"+macro)
 regex_cpp_include = re.compile(r"(?P<cpp_include>#[Ii][Nn][Cc][Ll][Uu][Dd][Ee])\s+"+r"(?P<fname>.*)")
 regexs_cpp = {}
@@ -106,7 +108,25 @@ class Macros(object):
     """
     for k, v in self.dic.items():
       if v is not None:
-        expression = expression.replace(k,v)
+        if '(' in k or ')' in k:
+          # function-like macro
+          matching = re.match(regex_function,k)
+          if matching:
+            fname  = matching.group('name')             # function name
+            vnames = matching.group('expr').split(',')  # variables names
+            if fname in expression:
+              for matching in re.finditer(regex_function,expression):
+                if matching:
+                  avnames = matching.group('expr').split(',')  # actual variables names
+                  # substituting first variables names
+                  expr = v
+                  for var,vname in enumerate(vnames):
+                    expr = expr.replace(vname,avnames[var])
+                  # substituting leftmost match
+                  expression = re.sub(regex_function,expr,expression)
+        else:
+          # object-like macro
+          expression = expression.replace(k,v)
     return expression
   def evaluate(self,expression):
     """
@@ -151,15 +171,11 @@ class Macros(object):
     if len(macros)>0:
       for m in macros:
         self.dic[m.split('=')[0]]=m.split('=')[1]
-  def get_from_cpp(self,macro=''):
+  def get_from_cpp(self,macro,expr):
     """
     Method for getting macro defined from cpp 'define'.
     """
-    macro_split = macro.split(' ')
-    if len(macro_split)>1:
-      self.dic[macro_split[0]]=macro_split[1]
-    else:
-      self.dic[macro_split[0]]=''
+    self.dic[macro]=expr
   def undef(self,macro_name=''):
     """
     Method for undefine a macro.
@@ -197,11 +213,10 @@ class Parsed_Line(object):
           matching = re.match(v,self.line)
           macro    = matching.group('macro')
           if matching.group('expr'):
-            expr = ' '+matching.group('expr')
+            expr = matching.group('expr')
           else:
             expr = ''
-          macro = re.sub(' +',' ',macro+expr)
-          macros.get_from_cpp(macro=macro)
+          macros.get_from_cpp(macro=macro,expr=expr)
         elif k == 'regex_cpp_undef':
           matching = re.match(v,self.line)
           macro    = matching.group('macro')

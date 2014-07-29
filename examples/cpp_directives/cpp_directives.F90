@@ -1,5 +1,7 @@
 #define FIRST
 program cpp_directives
+implicit none
+real:: x,y,z
 
 #ifdef FIRST
 print*,'Ok, "define" and "ifdef-else" work!'
@@ -48,6 +50,16 @@ print*,'  Current time: __TIME__'
 
 #include "foo.F90"
 
+#define COMPLEX_EXPR print*,'Ok, the complex expression substitution works!' ; print*,' If you see me it really works!'
+COMPLEX_EXPR
+
+#define MYPRINT(x) print*,'Ok ',x,' works!'
+MYPRINT('simple function-like macros')
+#define FRAC(a,b) a/b
+y = 1.
+z = 2.
+x = FRAC(y,z)
+print*,'x = ',x,' if it is 0.5 complex function-like macros work!'
 contains
   subroutine first
     print*,'I am the First!'
