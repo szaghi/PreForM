@@ -194,11 +194,14 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
-### 0.0.2 
-##### Download [ZIP](https://github.com/szaghi/PreForM/archive/0.0.2.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/0.0.2.tar.gz) one
+### v0.0.3 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.3.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.3.tar.gz) one
+Implement function-like macros substitution. Fully backward compatible.
+### v0.0.2 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.2.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.2.tar.gz) one
 _Quasi_ stable API, with many _cpp_ directives supported. Fully backward compatible.
-### 0.0.1 
-##### Download [ZIP](https://github.com/szaghi/PreForM/archive/0.0.1.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/0.0.1.tar.gz) one
+### v0.0.1 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.1.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.1.tar.gz) one
 Very first, totally UNSTABLE release. Implement only few cpp directives.
 
 Go to [Top](#top) or [Toc](#toc)
