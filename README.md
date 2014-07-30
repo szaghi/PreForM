@@ -1,6 +1,8 @@
 # PreForM.py
 ### <a name="top">PreForM.py,  Preprocessor for Fortran poor Men
-A very simple and stupid preprocessor for modern Fortran projects.
+A very simple and stupid preprocessor for modern Fortran projects. 
+
+It Supports the most used `cpp` preprocessing directives and provides advanced features typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable within any programming languages) it is focused on Fortran programming language.
 
 ## <a name="toc">Table of Contents
 * [Team Members](#team-members)
@@ -63,7 +65,7 @@ Writing a _macro_ in _cpp_ syntax to _generalize_ such a generic interface imple
 ...
 interface foo
   #PFM for i in [1,2,3]:
-  module procedure foo1,foo2,foo3
+  module procedure foo$i
   #PFM endfor
 endinterface
 contains
@@ -80,7 +82,7 @@ PreForM.py is just a pre-processor for Fortran poor-men supporting a sub-set of 
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
-+ Support for `cpp` preprocessing directives:
++ Support the most used `cpp` preprocessing directives:
   + conditionals:
       + operators (also nested):
         * [x] `defined MACRO` or `defined(MACRO)`;
@@ -100,8 +102,8 @@ Go to [Top](#top) or [Toc](#toc)
       * [x] `__TIME__`;
     * [x] expansion;
     * [x] stringification;
-    * [ ] concatenation;
-    * [ ] variadic macros;
+    * [x] concatenation;
+    * [x] variadic macros;
     + object-like macros:
       * [x] `#define MACRO [VALUE]`, VALUE is optional;
     + function-like macros:
@@ -127,6 +129,7 @@ Go to [Top](#top) or [Toc](#toc)
         + configparser;
         + re;
     + optional modules:
+        + datetime;
         + multiprocessing;
 + a lot of patience with the author.
 
@@ -180,9 +183,20 @@ PreForM.py my_file_to_be_preprocessed.my_extension -o my_result_file
 ```
 This will save into `my_result_file` the result of pre-processing the input file.
 
+### <a name="cli-macro"></a>Defines MACROS from CLI
+It is possible to defines macros on-the-fly using the CLI switch `-D`. As an example
+```bash
+PreForM.py my_source.f90 -D first=1 second=sec third=.true.
+```
+preprocess the source file `my_source.f90` defining on-the-fly 3 macros, `first,second,third`, having the values `1,'sec',.true.`, respectively. The syntax is `macro_name=macro_value`. In case you want just define a macro name (without take into account for its value) you must always insert the symbol `=`, e.g.
+```bash
+PreForM.py my_source.f90 -D first= second=2
+```
+this defines 2 macros, `first,second` with only `second` has a true value (`2`) while `first` is only _defined_.
+
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="examples"></a>Examples
-To be written.
+Into the directory _examples_ there are some KISS examples, just read their provided _REAMDE.md_.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="tips"></a>Tips for non pythonic users

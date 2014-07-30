@@ -117,15 +117,32 @@ class Macros(object):
             if fname in expression:
               for matching in re.finditer(regex_function,expression):
                 if matching:
-                  avnames = matching.group('expr').split(',')  # actual variables names
-                  # substituting first variables names
                   expr = v
-                  for var,vname in enumerate(vnames):
-                    # stringification
-                    if '#' in expr:
-                      for match in re.finditer('#'+vname,expr):
-                        expr = re.sub('#'+vname,'"'+vname+'"',expr)
-                    expr = expr.replace(vname,avnames[var])
+                  if '...' == vnames[0]:
+                    # variadic macro
+                    avnames = matching.group('expr')  # actual variables names
+                    if '__VA_ARGS__' in v:
+                      # stringification
+                      if '#__VA_ARGS__' in v:
+                        for match in re.finditer(',',avnames):
+                          avnames = re.sub(',','","',avnames)
+                        avnames = '"'+avnames+'"'
+                      expr = re.sub('(|#)__VA_ARGS__',avnames,expr)
+                  else:
+                    avnames = matching.group('expr').split(',')  # actual variables names
+                    # substituting first variables names
+                    for var,vname in enumerate(vnames):
+                      # stringification
+                      if '#' in expr:
+                        for match in re.finditer('#'+vname,expr):
+                          expr = re.sub('#'+vname,'"'+vname+'"',expr)
+                      expr = expr.replace(vname,avnames[var])
+                  # concatenation
+                  if '##' in expr:
+                    for match in re.finditer('(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',expr):
+                      lhs = match.group('lhs')
+                      rhs = match.group('rhs')
+                      expr = re.sub('(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',lhs+rhs,expr)
                   # substituting leftmost match
                   expression = re.sub(regex_function,expr,expression)
         else:
