@@ -2,7 +2,7 @@
 ### <a name="top">PreForM.py,  Preprocessor for Fortran poor Men
 A very simple and stupid preprocessor for modern Fortran projects. 
 
-It Supports the most used `cpp` preprocessing directives and provides advanced features typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable within any programming languages) it is focused on Fortran programming language.
+PreForM.py supports the most used `cpp` pre-processing directives and provides advanced features typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable within any programming languages) it is focused on Fortran programming language.
 
 ## <a name="toc">Table of Contents
 * [Team Members](#team-members)
@@ -16,8 +16,8 @@ It Supports the most used `cpp` preprocessing directives and provides advanced f
 * [Getting Help](#help)
 * [Copyrights](#copyrights)
 * [Usage](#usage)
-    + [Preprocess a file on-the-fly to stdout](#preprocess-fly)
-    + [Preprocess a file and save result to a file](#preprocess-tofile)
+    + [Pre-process a file on-the-fly to stdout](#preprocess-fly)
+    + [Pre-process a file and save result to a file](#preprocess-tofile)
 * [Examples](#examples)
 * [Tips for non pythonic users](#tips)
 * [Version History](#versions)
@@ -30,15 +30,21 @@ It Supports the most used `cpp` preprocessing directives and provides advanced f
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="why"></a>Why?
-The Fortran programming language has not its own pre-processor neither it has a standard pre-processing syntax. Consequently, Fortran developers must rely on external pre-processor tool. However, the pre-processors focused on Fortran language are very fews: PreForM.py is just anther Pythonic pre-processor designed with only main target, the _Fortran poor-men_. It is designed to be very simple, but flexible enough to constitute a _template system_ for Fortran developers. Moreover, to facilitate the migration from other pre-processors, PreForM.py support many _cpp_ pre-processing directives.
+The Fortran programming language has not its own pre-processor neither it has a standard pre-processing syntax. Consequently, Fortran developers must rely on external pre-processor tools. However, the pre-processors focused on Fortran language are very fews: PreForM.py is just anther Pythonic pre-processor designed with only main target, the _Fortran poor-men_. 
+
+It is designed to be very simple, but flexible enough to constitute a _template system_ for Fortran developers. Moreover, to facilitate the migration from other pre-processors, PreForM.py supports the most used _cpp_ pre-processing directives. 
+
+It is worth noting that PreForM.py even if it is designed for _Fortran poor-men_ is presently Fortran-agnostic, as a consequence it can be used within any programming language. 
 
 ### <a name="cpp"></a>Why not use cpp?
-As a matter of fact, many Fortran developers use _cpp_, the C pre-processor, being one of the most diffused and standardised pre-processor. _cpp_ is a great pre-processor, but is basically a _macro processor_, meaning that it is quite focused on _macroexpansion/substitution/evaluation_. _cpp_ has some limitations that makes complex using it as a template system. Let us suppose we want to write a generic interface as the following:
+As a matter of fact, many Fortran developers use _cpp_, the C pre-processor, being one of the most diffused and standardised pre-processor. _cpp_ is a great pre-processor, but it is basically a _macro processor_, meaning that it is quite focused on _macro expansion/substitution/evaluation_. _cpp_ has some limitations that makes complex using it as a template system. Let us suppose we want to write a generic interface as the following:
 
 ```fortran
 ...
 interface foo
-  module procedure foo1,foo2,foo3
+  module procedure foo1
+  module procedure foo2
+  module procedure foo3
 endinterface
 contains
   function foo1(in) result(out)
@@ -78,11 +84,11 @@ contains
   #PFM endfor
 ```
 
-PreForM.py is just a pre-processor for Fortran poor-men supporting a sub-set of _cpp_ directives, but overtaking some of _cpp_ limitations making PreForM.py similar to a template system. 
+PreForM.py is just a pre-processor for Fortran poor-men supporting the most used _cpp_ directives, but overtaking some of the _cpp_ limitations in order to make PreForM.py similar to a template system. 
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
-+ Support the most used `cpp` preprocessing directives:
++ Support the most used `cpp` pre-processing directives:
   + conditionals:
       + operators (also nested):
         * [x] `defined MACRO` or `defined(MACRO)`;
@@ -110,13 +116,13 @@ Go to [Top](#top) or [Toc](#toc)
       * [x] `#define FUNCTION FUNCTION_DEFINITION`;
     * [x] `#undef`;
   + [x] `#include`;
-+ Pythonic Templating System:
++ Pythonic Template System:
   * [ ] `#PFM for EXPRESSION` loop control;
 + ...
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="todos"></a>Todos
-+ Almost all!
++ Pythonic Template System;
 + ...
 
 Go to [Top](#top) or [Toc](#toc)
@@ -172,27 +178,27 @@ optional arguments:
   -lm, --list-macros    Print the list of macros state as the last parsed line
                         left it
 ```
-### <a name="preprocess-fly"></a>Preprocess a file on-the-fly to stdout
+### <a name="preprocess-fly"></a>Pre-process a file on-the-fly to stdout
 ```bash
 PreForM.py my_file_to_be_preprocessed.my_extension
 ```
-This will echoed to stdout the result of pre-processing the input file.
-### <a name="preprocess-tofile"></a>Preprocess a file and save result to a file
+This will print to stdout the pre-processed file.
+### <a name="preprocess-tofile"></a>Pre-process a file and save result to a file
 ```bash
 PreForM.py my_file_to_be_preprocessed.my_extension -o my_result_file
 ```
-This will save into `my_result_file` the result of pre-processing the input file.
+This will save into `my_result_file` the pre-processed file.
 
 ### <a name="cli-macro"></a>Defines MACROS from CLI
-It is possible to defines macros on-the-fly using the CLI switch `-D`. As an example
+It is possible to define macros on-the-fly using the CLI switch `-D`. As an example
 ```bash
 PreForM.py my_source.f90 -D first=1 second=sec third=.true.
 ```
-preprocess the source file `my_source.f90` defining on-the-fly 3 macros, `first,second,third`, having the values `1,'sec',.true.`, respectively. The syntax is `macro_name=macro_value`. In case you want just define a macro name (without take into account for its value) you must always insert the symbol `=`, e.g.
+pre-process the source file `my_source.f90` defining on-the-fly 3 macros, `first,second,third`, having the values `1,'sec',.true.`, respectively. The syntax is `macro_name=macro_value`. In case you want just define a macro name (without take into account for its value) you must always insert the symbol `=`, e.g.
 ```bash
 PreForM.py my_source.f90 -D first= second=2
 ```
-this defines 2 macros, `first,second` with only `second` has a true value (`2`) while `first` is only _defined_.
+This defines 2 macros, `first,second`, but `second` only has a true value (`2`), whereas `first` is only _defined_, but it has not a value.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="examples"></a>Examples
@@ -208,6 +214,9 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
+### v0.0.4 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.4.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.4.tar.gz) one
+`CPP` Support almost complete. The most used `cpp` preprocessing directives are now supported. Fully backward compatible.
 ### v0.0.3 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.3.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.3.tar.gz) one
 Implement function-like macros substitution. Fully backward compatible.
