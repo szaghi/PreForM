@@ -18,6 +18,7 @@ PreForM.py supports the most used `cpp` pre-processing directives and provides a
 * [Usage](#usage)
     + [Pre-process a file on-the-fly to stdout](#preprocess-fly)
     + [Pre-process a file and save result to a file](#preprocess-tofile)
+    + [Defines MACROS from CLI](#cli-macro)
 * [Examples](#examples)
 * [Tips for non pythonic users](#tips)
 * [Version History](#versions)
@@ -216,7 +217,7 @@ Go to [Top](#top) or [Toc](#toc)
 In the following the changelog of most important releases is reported.
 ### v0.0.4 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.4.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.4.tar.gz) one
-`CPP` Support almost complete. The most used `cpp` preprocessing directives are now supported. Fully backward compatible.
+`CPP` Support almost complete. The most used `cpp` pre-processing directives are now supported. Fully backward compatible.
 ### v0.0.3 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.3.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.3.tar.gz) one
 Implement function-like macros substitution. Fully backward compatible.
