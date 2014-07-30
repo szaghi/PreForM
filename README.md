@@ -89,7 +89,9 @@ PreForM.py is just a pre-processor for Fortran poor-men supporting the most used
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
-+ Support the most used `cpp` pre-processing directives:
++ Easy-extensible: PreForM.py is just a less-than 500 lines of Python statements... no bad for a poor-cpp-preprocessor improvement;
++ simple command line interface;
++ support the most used `cpp` pre-processing directives:
   + conditionals:
       + operators (also nested):
         * [x] `defined MACRO` or `defined(MACRO)`;
@@ -117,14 +119,17 @@ Go to [Top](#top) or [Toc](#toc)
       * [x] `#define FUNCTION FUNCTION_DEFINITION`;
     * [x] `#undef`;
   + [x] `#include`;
-+ Pythonic Template System:
-  * [ ] `#PFM for EXPRESSION` loop control;
++ pythonic Template System:
+  * [x] `#PFM for EXPRESSION`-`#PFM endfor` pairs loop control (only for one iteration counter at time;
 + ...
+
+Note that in general the `cpp` pre-processing directives should start at the first column, the symbol `#` being the first one. PreForM.py relaxes this rule allowing any number of leading white spaces before `#`.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="todos"></a>Todos
 + Pythonic Template System;
-+ ...
+  * [ ] `#PFM for EXPRESSION`-`#PFM endfor` pairs loop control for complex EXPRESSION;
++ any feature request is welcome.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="requirements"></a>Requirements
@@ -215,6 +220,9 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
+### v1.0.0 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v1.0.0.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v1.0.0.tar.gz) one
+First STABLE release. Implement `#PFM for EXPRESSION`-`#PFM endfor` pairs loop control for only simple expressions (i.e. expression having only one iteration counter). Fully backward compatible.
 ### v0.0.4 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v0.0.4.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v0.0.4.tar.gz) one
 `CPP` Support almost complete. The most used `cpp` pre-processing directives are now supported. Fully backward compatible.
