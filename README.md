@@ -90,6 +90,7 @@ PreForM.py is just a pre-processor for Fortran poor-men supporting the most used
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="main-features"></a>Main features
 + Easy-extensible: PreForM.py is just a less-than 500 lines of Python statements... no bad for a poor-cpp-preprocessor improvement;
++ well integrated with a powerful yet simple automatic Building System for Fortran poor-men, namely [FoBiS.py](https://github.com/szaghi/FoBiS);
 + simple command line interface;
 + support the most used `cpp` pre-processing directives:
   + conditionals:
