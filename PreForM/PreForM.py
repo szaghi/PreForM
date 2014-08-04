@@ -106,7 +106,10 @@ class PFMdirective(object):
       for c in self.block_contents:
         cmd = cmd + "  block = block + '"+c.replace('$'+counter,"'+str("+counter+"+1)+'")+"'"
         cmd = cmd +r'+"\n"'+'\n'
+      #if sys.version_info[0]<3 :
       exec cmd
+      #else:
+        #exec(expr=cmd)
       return block
 class Macros(object):
   """
