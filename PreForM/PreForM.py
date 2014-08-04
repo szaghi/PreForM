@@ -3,7 +3,7 @@
 PreForM.py, Preprocessor for Fortran poor Men
 """
 __appname__ = "PreForM.py"
-__version__ = "1.0.0"
+__version__ = "v1.1.0"
 __author__ = "Stefano Zaghi"
 __author_email__ = "stefano.zaghi@gmail.com"
 __license__ = "GNU General Public License v3 (GPLv3)"
