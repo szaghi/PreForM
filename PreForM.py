@@ -3,8 +3,8 @@
 PreForM.py, Preprocessor for Fortran poor Men
 """
 __appname__ = 'PreForM.py'
-__version__ ="0.0.1"
-__author__  = 'Stefano Zaghi'
+__version__ = "0.0.1"
+__author__ = 'Stefano Zaghi'
 # modules loading
 import sys
 try:
@@ -24,43 +24,43 @@ except:
   sys.exit(1)
 try:
   from multiprocessing import Pool
-  parallel=True
+  __parallel__ = True
 except:
   print("Module 'multiprocessing' not found: parallel compilation disabled")
-  parallel=False
+  __parallel__ = False
 # setting CLI
-cliparser = argparse.ArgumentParser(prog=__appname__,description='PreForM.py, Preprocessor for Fortran poor Men')
-cliparser.add_argument('-v','--version',                    action='version',                           help='Show version',version='%(prog)s '+__version__)
-cliparser.add_argument('input',                             action='store',               default=None, help='Input file name of source to be preprocessed')
-cliparser.add_argument('-o','--output',      required=False,action='store',               default=None, help='Output file name of preprocessed source')
-cliparser.add_argument('-D',                 required=False,action='store',     nargs='+',default=[],   help='Define a list of macros in the form NAME1=VALUE1 NAME2=VALUE2...')
-cliparser.add_argument('-lm','--list-macros',required=False,action='store_true',          default=False,help='Print the list of macros state as the last parsed line left it')
+__cliparser__ = argparse.ArgumentParser(prog=__appname__,description='PreForM.py, Preprocessor for Fortran poor Men')
+__cliparser__.add_argument('-v','--version',                    action='version',                           help='Show version',version='%(prog)s '+__version__)
+__cliparser__.add_argument('input',                             action='store',               default=None, help='Input file name of source to be preprocessed')
+__cliparser__.add_argument('-o','--output',      required=False,action='store',               default=None, help='Output file name of preprocessed source')
+__cliparser__.add_argument('-D',                 required=False,action='store',     nargs='+',default=[],   help='Define a list of macros in the form NAME1=VALUE1 NAME2=VALUE2...')
+__cliparser__.add_argument('-lm','--list-macros',required=False,action='store_true',          default=False,help='Print the list of macros state as the last parsed line left it')
 #regular expressions
-name = r"(?P<name>[a-zA-Z][a-zA-Z0-9_]*)"
-macro = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*(|\(.*?\)))"
-expr = r"(?P<expr>.*)"
-regex_function = re.compile(name+r"\("+expr+r"\).*")
+__vname__ = r"(?P<name>[a-zA-Z][a-zA-Z0-9_]*)"
+__macro__ = r"(?P<macro>[a-zA-Z][a-zA-Z0-9_]*(|\(.*?\)))"
+__expr__ = r"(?P<expr>.*)"
+__regex_function__ = re.compile(__vname__+r"\("+__expr__+r"\).*")
 # cpp directives
-regex_cpp_define  = re.compile(r"(?P<cpp_define>^(|\s*)#[Dd][Ee][Ff][Ii][Nn][Ee])\s+"+macro+r"\s+"+expr)
-regex_cpp_undef   = re.compile(r"(?P<cpp_undef>^(|\s*)#[Uu][Nn][Dd][Ee][Ff])\s+"+macro)
-regex_cpp_include = re.compile(r"(?P<cpp_include>^(|\s*)#[Ii][Nn][Cc][Ll][Uu][Dd][Ee])\s+"+r"(?P<fname>.*)")
-regexs_cpp = {}
+__regex_cpp_define__ = re.compile(r"(?P<cpp_define>^(|\s*)#[Dd][Ee][Ff][Ii][Nn][Ee])\s+"+__macro__+r"\s+"+__expr__)
+__regex_cpp_undef__ = re.compile(r"(?P<cpp_undef>^(|\s*)#[Uu][Nn][Dd][Ee][Ff])\s+"+__macro__)
+__regex_cpp_include__ = re.compile(r"(?P<cpp_include>^(|\s*)#[Ii][Nn][Cc][Ll][Uu][Dd][Ee])\s+"+r"(?P<fname>.*)")
+__regexs_cpp__ = {}
 for k, v in locals().items():
-  if not re.match(r"^regex_cpp_cond_.*",k) and re.match(r"^regex_cpp_.*",k):
-    regexs_cpp[k] = v
+  if not re.match(r"^__regex_cpp_cond_.*__",k) and re.match(r"^__regex_cpp_.*__",k):
+    __regexs_cpp__[k] = v
 # cpp conditional directives
-regex_cpp_cond_if          = re.compile(r"(?P<cpp_if>^(|\s*)#[Ii][Ff])\s+"+expr)
-regex_cpp_cond_ifdef       = re.compile(r"(?P<cpp_ifdef>^(|\s*)#[Ii][Ff][Dd][Ee][Ff])\s+"+macro)
-regex_cpp_cond_ifndef      = re.compile(r"(?P<cpp_ifndef>^(|\s*)#[Ii][Ff][Nn][Dd][Ee][Ff])\s+"+macro)
-regex_cpp_cond_elif        = re.compile(r"(?P<cpp_elif>^(|\s*)#[Ee][Ll][Ii][Ff])\s+"+expr)
-regex_cpp_cond_else        = re.compile(r"(?P<cpp_else>^(|\s*)#[Ee][Ll][Ss][Ee])\s*")
-regex_cpp_cond_endif       = re.compile(r"(?P<cpp_endif>^(|\s*)#[Ee][Nn][Dd][Ii][Ff]).*")
-regex_cpp_cond_defined     = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][Ee][Dd])"+"(\s+|\()"+macro+r"(|\))")
-regex_cpp_cond_defined_kwd = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][Ee][Dd])")
-regexs_cpp_cond = {}
+__regex_cpp_cond_if__ = re.compile(r"(?P<cpp_if>^(|\s*)#[Ii][Ff])\s+"+__expr__)
+__regex_cpp_cond_ifdef__ = re.compile(r"(?P<cpp_ifdef>^(|\s*)#[Ii][Ff][Dd][Ee][Ff])\s+"+__macro__)
+__regex_cpp_cond_ifndef__ = re.compile(r"(?P<cpp_ifndef>^(|\s*)#[Ii][Ff][Nn][Dd][Ee][Ff])\s+"+__macro__)
+__regex_cpp_cond_elif__ = re.compile(r"(?P<cpp_elif>^(|\s*)#[Ee][Ll][Ii][Ff])\s+"+__expr__)
+__regex_cpp_cond_else__ = re.compile(r"(?P<cpp_else>^(|\s*)#[Ee][Ll][Ss][Ee])\s*")
+__regex_cpp_cond_endif__ = re.compile(r"(?P<cpp_endif>^(|\s*)#[Ee][Nn][Dd][Ii][Ff]).*")
+__regex_cpp_cond_defined__ = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][Ee][Dd])"+r"(\s+|\()"+__macro__+r"(|\))")
+__regex_cpp_cond_defined_kwd__ = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][Ee][Dd])")
+__regexs_cpp_cond__ = {}
 for k, v in locals().items():
-  if re.match(r"^regex_cpp_cond_.*",k):
-    regexs_cpp_cond[k] = v
+  if re.match(r"^__regex_cpp_cond_.*__",k):
+    __regexs_cpp_cond__[k] = v
 # pre-defined macros
 try:
   from datetime import datetime
@@ -70,23 +70,25 @@ try:
 except:
   __date__ = ''
   __time__ = ''
-predef_macro = {'__FILE__':'','__LINE__':'','__DATE__':__date__,'__TIME__':__time__}
+__predef_macro__ = {'__FILE__':'','__LINE__':'','__DATE__':__date__,'__TIME__':__time__}
 # PreForM.py macros: template system
-regex_pfm_kwd = "#PFM"
-regex_pfm     = re.compile(r"^(|\s*)#PFM\s+")
+__regex_pfm_kwd__ = "#PFM"
+__regex_pfm__ = re.compile(r"^(|\s*)#PFM\s+")
 # classes definitions
 class PFMdirective(object):
   """
   PFMdirectives is an object that handles PreForM.py specific pre-processing directives, their attributes and methods.
   """
-  def __init__(self,for_block=False,for_expression='',block_contents=[]):
-    self.for_block      = for_block
+  def __init__(self,for_block=False,for_expression='',block_contents=None):
+    self.for_block = for_block
     self.for_expression = for_expression
     self.block_contents = block_contents
   def add_to_block(self,line):
     """
     Method for adding line to block_contents.
     """
+    if not self.block_contents :
+      self.block_contents = []
     self.block_contents.append(line.replace('\n',''))
   def execute(self):
     """
@@ -95,7 +97,8 @@ class PFMdirective(object):
     if self.for_block:
       counter = self.for_expression.split('for')[1].split(' ')
       counter = next(item for item in counter if item is not '')
-      cmd = "block = ''\n"
+      block = r'\n'
+      cmd = ''
       cmd = cmd + self.for_expression.lstrip()
       for c in self.block_contents:
         cmd = cmd + "  block = block + '"+c.replace('$'+counter,"'+str("+counter+"+1)+'")+"'"
@@ -106,18 +109,21 @@ class Macros(object):
   """
   Macros is an object that handles defined and non defined macros, their attributes and methods.
   """
-  def __init__(self,dic=predef_macro):
+  def __init__(self,dic=__predef_macro__):
     self.dic = dic
   def set(self,macro,value):
+    """
+    Method for setting macro's value or defining it.
+    """
     self.dic[macro] = value
   def is_def(self,macro):
     """
     Method for checking if a macro is presently defined.
     """
     result = False
-    for k, v in self.dic.items():
-      if macro == k:
-        if v is not None:
+    for key, val in self.dic.items():
+      if macro == key:
+        if val is not None:
           result = True
           return result
     return result
@@ -126,9 +132,9 @@ class Macros(object):
     Method for checking if a macro is not presently defined.
     """
     result = True
-    for k, v in self.dic.items():
-      if macro == k:
-        if v is not None:
+    for key, val in self.dic.items():
+      if macro == key:
+        if val is not None:
           result = False
           return result
     return result
@@ -136,24 +142,24 @@ class Macros(object):
     """
     Method for expandind defined macros present into the expression.
     """
-    for k, v in self.dic.items():
-      if v is not None:
-        if '(' in k or ')' in k:
+    for mkey, mval in self.dic.items():
+      if mval is not None:
+        if '(' in mkey or ')' in mkey:
           # function-like macro
-          matching = re.match(regex_function,k)
+          matching = re.match(__regex_function__,mkey)
           if matching:
             fname  = matching.group('name')             # function name
             vnames = matching.group('expr').split(',')  # variables names
             if fname in expression:
-              for matching in re.finditer(regex_function,expression):
+              for matching in re.finditer(__regex_function__,expression):
                 if matching:
-                  expr = v
+                  expr = mval
                   if '...' == vnames[0]:
                     # variadic macro
                     avnames = matching.group('expr')  # actual variables names
-                    if '__VA_ARGS__' in v:
+                    if '__VA_ARGS__' in mval:
                       # stringification
-                      if '#__VA_ARGS__' in v:
+                      if '#__VA_ARGS__' in mval:
                         for match in re.finditer(',',avnames):
                           avnames = re.sub(',','","',avnames)
                         avnames = '"'+avnames+'"'
@@ -169,15 +175,15 @@ class Macros(object):
                       expr = expr.replace(vname,avnames[var])
                   # concatenation
                   if '##' in expr:
-                    for match in re.finditer('(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',expr):
+                    for match in re.finditer(r'(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',expr):
                       lhs = match.group('lhs')
                       rhs = match.group('rhs')
-                      expr = re.sub('(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',lhs+rhs,expr)
+                      expr = re.sub(r'(?P<lhs>.*[^ ])\s*##\s*(?P<rhs>[^ ].*)',lhs+rhs,expr)
                   # substituting leftmost match
-                  expression = re.sub(regex_function,expr,expression)
+                  expression = re.sub(__regex_function__,expr,expression)
         else:
           # object-like macro
-          expression = expression.replace(k,v)
+          expression = expression.replace(mkey,mval)
     return expression
   def evaluate(self,expression):
     """
@@ -185,10 +191,10 @@ class Macros(object):
     """
     expression_processed = expression
     # check for "defined" operators
-    defined = re.findall(regex_cpp_cond_defined,expression)
+    defined = re.findall(__regex_cpp_cond_defined__,expression)
     for d in defined:
       expression_processed = expression_processed.replace(d[2],str(self.is_def(d[2])))
-      expression_processed = re.sub(regex_cpp_cond_defined_kwd,'',expression_processed)
+      expression_processed = re.sub(__regex_cpp_cond_defined_kwd__,'',expression_processed)
     # check for "or" and "and" operators
     expression_processed = expression_processed.replace('||',' or ')
     expression_processed = expression_processed.replace('&&',' and ')
@@ -208,19 +214,19 @@ class Macros(object):
     Method for printing the list of macros.
     """
     print('Defined macros')
-    for k, v in self.dic.items():
-      if v is not None:
-        print(k+': '+str(v))
+    for key, val in self.dic.items():
+      if val is not None:
+        print(key+': '+str(val))
     print('Undefined macros')
-    for k, v in self.dic.items():
-      if v is None:
-        print(k)
-  def get_from_CLI(self,macros=[]):
+    for key, val in self.dic.items():
+      if val is None:
+        print(key)
+  def get_from_CLI(self,climacros=[]):
     """
     Method for getting macros defined from CLI.
     """
-    if len(macros)>0:
-      for m in macros:
+    if len(climacros)>0 :
+      for m in climacros:
         self.dic[m.split('=')[0]]=m.split('=')[1]
   def undef(self,macro_name=''):
     """
@@ -250,81 +256,81 @@ class Parsed_Line(object):
     Method for checking if line contains preprocessing directives.
     """
     # cpp directives
-    for k, v in regexs_cpp.items():
-      matching = re.search(v,self.line)
+    for key, val in __regexs_cpp__.items():
+      matching = re.search(val,self.line)
       if matching:
         state.action = 'omit'
         #state.scope = 'normal'
-        if k == 'regex_cpp_define':
-          matching = re.match(v,self.line)
+        if key == '__regex_cpp_define__':
+          matching = re.match(val,self.line)
           macro    = matching.group('macro')
           if matching.group('expr'):
             expr = matching.group('expr')
           else:
             expr = ''
           macros.set(macro=macro,value=expr)
-        elif k == 'regex_cpp_undef':
-          matching = re.match(v,self.line)
+        elif key == '__regex_cpp_undef__':
+          matching = re.match(val,self.line)
           macro    = matching.group('macro')
           macros.undef(macro_name=macro)
-        elif k == 'regex_cpp_include':
-          matching = re.match(v,self.line)
+        elif key == '__regex_cpp_include__':
+          matching = re.match(val,self.line)
           inc = matching.group('fname')
           inc = inc.replace('"','')
           state.action = 'include'
           state.include = inc
         return
     # cpp conditional directives
-    for k, v in regexs_cpp_cond.items():
-      matching = re.search(v,self.line)
+    for key, val in __regexs_cpp_cond__.items():
+      matching = re.search(val,self.line)
       if matching:
-        if k == 'regex_cpp_cond_if' or k == 'regex_cpp_cond_elif':
-          matching = re.match(v,self.line)
+        if key == '__regex_cpp_cond_if__' or key == '__regex_cpp_cond_elif__':
+          matching = re.match(val,self.line)
           expression = matching.group('expr')
           state.action = 'omit'
           if macros.evaluate(expression):
             state.scope = 'print'
           else:
             state.scope = 'omit'
-        elif k == 'regex_cpp_cond_ifdef':
-          matching = re.match(v,self.line)
+        elif key == '__regex_cpp_cond_ifdef__':
+          matching = re.match(val,self.line)
           macro    = matching.group('macro')
           state.action = 'omit'
           if macros.is_def(macro=macro):
             state.scope = 'print'
           else:
             state.scope = 'omit'
-        elif k == 'regex_cpp_cond_ifndef':
-          matching = re.match(v,self.line)
+        elif key == '__regex_cpp_cond_ifndef__':
+          matching = re.match(val,self.line)
           macro    = matching.group('macro')
           state.action = 'omit'
           if macros.is_undef(macro=macro):
             state.scope = 'print'
           else:
             state.scope = 'omit'
-        elif k == 'regex_cpp_cond_else':
+        elif key == '__regex_cpp_cond_else__':
           state.action = 'omit'
           if state.scope == 'print':
             state.scope = 'omit'
           else:
             state.scope = 'print'
-        elif k == 'regex_cpp_cond_endif':
+        elif key == '__regex_cpp_cond_endif__':
           state.action = 'omit'
           state.scope = 'normal'
         return
     # PreForM.py directives
     if state.scope != 'omit':
-      matching = re.search(regex_pfm,self.line)
+      matching = re.search(__regex_pfm__,self.line)
       if matching:
         state.action = 'omit'
-        match = re.search("\s+for\s+",self.line.split(regex_pfm_kwd)[1])
+        match = re.search(r"\s+for\s+",self.line.split(__regex_pfm_kwd__)[1])
         if match:
           # for block starts
           state.scope = 'for_block'
           pfmdir.for_block=True
-          pfmdir.for_expression=self.line.split(regex_pfm_kwd)[1]
+          pfmdir.for_expression=self.line.split(__regex_pfm_kwd__)[1]
         else:
-          match = re.search("\s+endfor\s+",self.line.split(regex_pfm_kwd)[1])
+          match = re.search(r"\s+endfor\s+",self.line.split(__regex_pfm_kwd__)[1])
           if match:
             # for block ends
             self.line = pfmdir.execute()
@@ -357,6 +363,9 @@ class Parsed_Line(object):
       return None
 # functions definitions
 def preprocess_file(sfile,parsed_file,macros,state,pfmdir):
+  """
+  Function for pre-processing a single file.
+  """
   if not os.path.exists(sfile):
     print('Error: input file "'+sfile+'" not found!')
     sys.exit(1)
@@ -379,18 +388,18 @@ def preprocess_file(sfile,parsed_file,macros,state,pfmdir):
   return
 # main loop
 if __name__ == '__main__':
-  cliargs = cliparser.parse_args()
-  macros = Macros()
-  macros.get_from_CLI(macros=cliargs.D)
-  pfmdir = PFMdirective()
+  cliargs = __cliparser__.parse_args()
+  MACROS = Macros()
+  MACROS.get_from_CLI(climacros=cliargs.D)
+  PFMDIR = PFMdirective()
   if cliargs.input:
     if cliargs.output:
-      parsed_file = open(cliargs.output,'w')
+      PARSED_FILE = open(cliargs.output,'w')
     else:
-      parsed_file = None
-    state = State()
-    preprocess_file(sfile=cliargs.input,parsed_file=parsed_file,macros=macros,state=state,pfmdir=pfmdir)
+      PARSED_FILE = None
+    STATE = State()
+    preprocess_file(sfile=cliargs.input,parsed_file=PARSED_FILE,macros=MACROS,state=STATE,pfmdir=PFMDIR)
     if cliargs.output:
-      parsed_file.close()
+      PARSED_FILE.close()
     if cliargs.list_macros:
-      macros.list()
+      MACROS.list()
