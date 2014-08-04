@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/szaghi/PreForM.png)](https://travis-ci.org/szaghi/PreForM)
+
 # PreForM.py
 ### <a name="top">PreForM.py,  Preprocessor for Fortran poor Men
 A very simple and stupid preprocessor for modern Fortran projects. 
@@ -154,9 +156,9 @@ Go to [Top](#top) or [Toc](#toc)
 ## <a name="install"></a>Install
 
 ### <a name="manual-install"></a>Manual Installation
-PreForM.py is a one-file-script, consequently it does not need of a real installation: simply download the script and placed into your PATH. See the [requirements](#requirements) section.
+PreForM.py is a one-file-script, consequently it does not need a real installation: simply download the script and placed into your PATH. See the [requirements](#requirements) section.
 
-However, note the script placed into the root of PreForM.py project is just a wrapper to the real script. As a matter of fact, the tree structure of the PreForM.py project is the following:
+However, note that the script placed into the root of PreForM.py project is just a wrapper to the real script. As a matter of fact, the tree structure of the PreForM.py project is the following:
 ```bash
 ├── CONTRIBUTING.md
 ├── examples
@@ -176,22 +178,22 @@ However, note the script placed into the root of PreForM.py project is just a wr
 ├── README.md
 └── setup.py
 ```
-Therefore, the actual script that you need to download is: `PreForM/PreForM.py `. This cumbersome files tree is necessary to create a valid `PyPI egg`, see PyPI [install](#pip-install) procedure.
+Therefore, the actual script that you need to download is `PreForM/PreForM.py `. This cumbersome files tree is necessary to create a valid `PyPI egg`, see PyPI [install](#pip-install) procedure.
 
 It can be convenient to _clone_ the project:
 ```bash
 git clone https://github.com/szaghi/PreForM
 ```
-and than make a link to script where your environment can find it.
+and then make a link to the script where your environment can find it.
 
 ### <a name="pip-install"></a>Using, PyPI the Python Package Index
-PreForM.py can now be installed by means of `pip` python installer that search into the PyPI (Python Package Index) for packages and automatically install them. Just type:
+PreForM.py can be installed by means of `pip`, the python installer that search into the PyPI (Python Package Index) for packages and automatically install them. Just type:
 ```bash
 pip install PreForM.py
 ```
 Note that you need root permissions if you are not using your virtualenv or you are trying to install PreForM.py into your system space.
 
-It is worth noting that the `pip` installation will create a command line tool named `PreForM` and not `PreForM.py`, take this into account when using PreForM.py.
+It is worth noting that the `pip` installation will create a command line tool named `PreForM` and not `PreForM.py`: take this into account when using PreForM.py.
 
 It is also worth noting that the `pip` installation will allow you to directly import PreForM.py code into your Python application by means of module import, e.g.
 ```python
