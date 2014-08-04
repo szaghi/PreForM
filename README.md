@@ -13,6 +13,8 @@ PreForM.py supports the most used `cpp` pre-processing directives and provides a
 * [Todos](#todos)
 * [Requirements](#requirements)
 * [Install](#install)
+    + [Manual Installation](#manual-install)
+    + [PyPI Installation, the Python Package Index](#pip-install)
 * [Getting Help](#help)
 * [Copyrights](#copyrights)
 * [Usage](#usage)
@@ -150,7 +152,52 @@ PreForM.py is developed on a GNU/Linux architecture. For Windows architecture th
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="install"></a>Install
-The installation is very simple: put PreForM.py in your path or execute it using full path. See the [requirements](#requirements) section.
+
+### <a name="manual-install"></a>Manual Installation
+PreForM.py is a one-file-script, consequently it does not need of a real installation: simply download the script and placed into your PATH. See the [requirements](#requirements) section.
+
+However, note the script placed into the root of PreForM.py project is just a wrapper to the real script. As a matter of fact, the tree structure of the PreForM.py project is the following:
+```bash
+├── CONTRIBUTING.md
+├── examples
+│   ├── cpp-directives
+│   │   ├── cpp-directives.F90
+│   │   ├── foo.inc
+│   │   └── README.md
+│   └── template-system
+│       ├── README.md
+│       └── simple-for-loop.f90
+├── LICENSE.gpl3.md
+├── PreForM
+│   ├── __init__.py
+│   ├── __main__.py
+│   └── PreForM.py
+├── PreForM.py
+├── README.md
+└── setup.py
+```
+Therefore, the actual script that you need to download is: `PreForM/PreForM.py `. This cumbersome files tree is necessary to create a valid `PyPI egg`, see PyPI [install](#pip-install) procedure.
+
+It can be convenient to _clone_ the project:
+```bash
+git clone https://github.com/szaghi/PreForM
+```
+and than make a link to script where your environment can find it.
+
+### <a name="pip-install"></a>Using, PyPI the Python Package Index
+PreForM.py can now be installed by means of `pip` python installer that search into the PyPI (Python Package Index) for packages and automatically install them. Just type:
+```bash
+pip install PreForM.py
+```
+Note that you need root permissions if you are not using your virtualenv or you are trying to install PreForM.py into your system space.
+
+It is worth noting that the `pip` installation will create a command line tool named `PreForM` and not `PreForM.py`, take this into account when using PreForM.py.
+
+It is also worth noting that the `pip` installation will allow you to directly import PreForM.py code into your Python application by means of module import, e.g.
+```python
+from PreForM.PreForM import preprocess_file 
+```
+will import the `preprocess_file` function into your python application.
 
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="help"></a>Getting Help]
@@ -221,6 +268,9 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
+### v1.1.0 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v1.1.0.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v1.1.0.tar.gz) one
+Add PyPI installation procedure. Strongly modify the project tree. Fully backward compatible.
 ### v1.0.0 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v1.0.0.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v1.0.0.tar.gz) one
 First STABLE release. Implement `#PFM for EXPRESSION`-`#PFM endfor` pairs loop control for only simple expressions (i.e. expression having only one iteration counter). Fully backward compatible.

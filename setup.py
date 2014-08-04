@@ -20,10 +20,11 @@ LICENSE = re.search(r'^__license__\s*=\s*"(.*)"', open('PreForM/PreForM.py').rea
 URL = re.search(r'^__url__\s*=\s*"(.*)"', open('PreForM/PreForM.py').read(), re.M).group(1)
 #setting up setup
 setup(name = APPNAME,
-      packages = find_packages(),
-      entry_points = {"console_scripts": ['PreForM.py = PreForM.PreForM:main']},
+      packages = ['PreForM'],
+      py_modules = ['PreForM.PreForM'],
+      entry_points = {"console_scripts": ['PreForM = PreForM.PreForM:main']},
       package_data = {'': ['*.md']},
-      install_requires = ['sys','os','argparse','re'],
+      install_requires = ['argparse'],
       version = VERSION,
       author = AUTHOR,
       author_email = AUTHOR_EMAIL,
