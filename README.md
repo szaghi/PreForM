@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/szaghi/PreForM.png)](https://travis-ci.org/szaghi/PreForM)
+[![PyPI version](https://badge.fury.io/py/PreForM.py.svg)](http://badge.fury.io/py/PreForM.py)
 
 # PreForM.py
 ### <a name="top">PreForM.py,  Preprocessor for Fortran poor Men
