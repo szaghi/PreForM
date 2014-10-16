@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/szaghi/PreForM.png)](https://travis-ci.org/szaghi/PreForM)
-[![PyPI version](https://badge.fury.io/py/PreForM.py.svg)](http://badge.fury.io/py/PreForM.py)
+[![Latest Version](https://pypip.in/version/PreForM.py/badge.svg)](https://pypi.python.org/pypi/PreForM.py/)
+[![Downloads](https://pypip.in/download/PreForM.py/badge.svg)](https://pypi.python.org/pypi/PreForM.py/)
+[![Supported Python versions](https://pypip.in/py_versions/PreForM.py/badge.svg)](https://pypi.python.org/pypi/PreForM.py/)
+[![Development Status](https://pypip.in/status/PreForM.py/badge.svg)](https://pypi.python.org/pypi/PreForM.py/)
+[![License](https://pypip.in/license/PreForM.py/badge.svg)](https://pypi.python.org/pypi/PreForM.py/)
 
 # PreForM.py
 ### <a name="top">PreForM.py,  Preprocessor for Fortran poor Men
