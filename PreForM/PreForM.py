@@ -5,12 +5,7 @@ PreForM.py, Preprocessor for Fortran poor Men
 from __future__ import print_function
 __appname__ = "PreForM.py"
 __description__ = "PreForM.py, Preprocessor for Fortran poor Men"
-__long_description__ = """A very simple and stupid preprocessor for modern Fortran projects.
-
-PreForM.py supports the most used cpp pre-processing directives and provides advanced features
-typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable
-within any programming languages) it is focused on Fortran programming language.
-"""
+__long_description__ = "A very simple and stupid preprocessor for modern Fortran projects. PreForM.py supports the most used cpp pre-processing directives and provides advanced features typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable within any programming languages) it is focused on Fortran programming language."
 __version__ = "v1.1.1"
 __author__ = "Stefano Zaghi"
 __author_email__ = "stefano.zaghi@gmail.com"

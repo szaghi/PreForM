@@ -5,7 +5,7 @@ from setuptools import setup
 # metadata from main source
 __source__ = open('PreForM/PreForM.py').read()
 __appname__ = re.search(r'^__appname__\s*=\s*"(.*)"', __source__, re.M).group(1)
-__description__ = re.search(r'^__description__\s*=\s*"(.*)"', __source__, re.M).group(1)
+__description__ = re.search(r'^__description__\s*=\s*"(.*)"', __source__,re.M).group(1)
 __long_description__ = re.search(r'^__long_description__\s*=\s*"(.*)"', __source__, re.M).group(1)
 __version__ = re.search(r'^__version__\s*=\s*"(.*)"', __source__, re.M).group(1)
 __author__ = re.search(r'^__author__\s*=\s*"(.*)"', __source__, re.M).group(1)
@@ -32,6 +32,5 @@ setup(name = __appname__,
                      'Programming Language :: Python :: 3.4',
                      'Environment :: Console',
                      'Intended Audience :: Developers',
-                     'Topic :: Software Development :: Preprocessor',
-                     'Topic :: Software Development :: Template System'])
+                     'Topic :: Software Development :: Code Generators'])
 
