@@ -11,7 +11,7 @@ PreForM.py supports the most used cpp pre-processing directives and provides adv
 typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable
 within any programming languages) it is focused on Fortran programming language.
 """
-__version__ = "v1.1.0"
+__version__ = "v1.1.1"
 __author__ = "Stefano Zaghi"
 __author_email__ = "stefano.zaghi@gmail.com"
 __license__ = "GNU General Public License v3 (GPLv3)"
