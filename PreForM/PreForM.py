@@ -2,35 +2,32 @@
 """
 PreForM.py, Preprocessor for Fortran poor Men
 """
+from __future__ import print_function
 __appname__ = "PreForM.py"
+__description__ = "PreForM.py, Preprocessor for Fortran poor Men"
+__long_description__ = """A very simple and stupid preprocessor for modern Fortran projects.
+
+PreForM.py supports the most used cpp pre-processing directives and provides advanced features
+typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable
+within any programming languages) it is focused on Fortran programming language.
+"""
 __version__ = "v1.1.0"
 __author__ = "Stefano Zaghi"
 __author_email__ = "stefano.zaghi@gmail.com"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __url__ = "https://github.com/szaghi/PreForM"
 # modules loading
+import argparse
+import ast
+import os
+import re
 import sys
-try:
-  import os
-except:
-  print("Module 'os' not found")
-  sys.exit(1)
-try:
-  import argparse
-except:
-  print("Module 'argparse' not found")
-  sys.exit(1)
-try:
-  import re
-except:
-  print("The regular expression module 're' not found")
-  sys.exit(1)
-try:
-  from multiprocessing import Pool
-  __parallel__ = True
-except:
-  print("Module 'multiprocessing' not found: parallel compilation disabled")
-  __parallel__ = False
+#try:
+#  from multiprocessing import Pool
+#  __parallel__ = True
+#except ImportError:
+#  print("Module 'multiprocessing' not found: parallel compilation disabled")
+#  __parallel__ = False
 # setting CLI
 __cliparser__ = argparse.ArgumentParser(prog=__appname__,description='PreForM.py, Preprocessor for Fortran poor Men')
 __cliparser__.add_argument('-v','--version',                    action='version',                           help='Show version',version='%(prog)s '+__version__)
@@ -67,10 +64,10 @@ for k, v in locals().items():
 # pre-defined macros
 try:
   from datetime import datetime
-  now = datetime.now()
-  __date__ = now.strftime('%b %d %Y')
-  __time__ = now.strftime('%X')
-except:
+  __now__ = datetime.now()
+  __date__ = __now__.strftime('%b %d %Y')
+  __time__ = __now__.strftime('%X')
+except ImportError:
   __date__ = ''
   __time__ = ''
 __predef_macro__ = {'__FILE__':'','__LINE__':'','__DATE__':__date__,'__TIME__':__time__}
@@ -100,14 +97,14 @@ class PFMdirective(object):
     if self.for_block:
       counter = self.for_expression.split('for')[1].split(' ')
       counter = next(item for item in counter if item is not '')
-      block = r'\n'
+      block = ''
       cmd = ''
       cmd = cmd + self.for_expression.lstrip()
-      for c in self.block_contents:
-        cmd = cmd + "  block = block + '"+c.replace('$'+counter,"'+str("+counter+"+1)+'")+"'"
+      for ctn in self.block_contents:
+        cmd = cmd + "  block = block + '"+ctn.replace('$'+counter,"'+str("+counter+"+1)+'")+"'"
         cmd = cmd +r'+"\n"'+'\n'
       #if sys.version_info[0]<3 :
-      exec cmd
+      exec(cmd)
       #else:
         #exec(expr=cmd)
       return block
@@ -115,13 +112,20 @@ class Macros(object):
   """
   Macros is an object that handles defined and non defined macros, their attributes and methods.
   """
-  def __init__(self,dic=__predef_macro__):
-    self.dic = dic
+  def __init__(self,dic=None):
+    if dic:
+      self.dic = dic
+    else:
+      self.dic = __predef_macro__
+    return
+
   def set(self,macro,value):
     """
     Method for setting macro's value or defining it.
     """
     self.dic[macro] = value
+    return
+
   def is_def(self,macro):
     """
     Method for checking if a macro is presently defined.
@@ -133,6 +137,7 @@ class Macros(object):
           result = True
           return result
     return result
+
   def is_undef(self,macro):
     """
     Method for checking if a macro is not presently defined.
@@ -144,6 +149,7 @@ class Macros(object):
           result = False
           return result
     return result
+
   def expand(self,expression):
     """
     Method for expandind defined macros present into the expression.
@@ -191,6 +197,7 @@ class Macros(object):
           # object-like macro
           expression = expression.replace(mkey,mval)
     return expression
+
   def evaluate(self,expression):
     """
     Method for evaluating a conditional expression accordingly to the current macros state.
@@ -198,8 +205,8 @@ class Macros(object):
     expression_processed = expression
     # check for "defined" operators
     defined = re.findall(__regex_cpp_cond_defined__,expression)
-    for d in defined:
-      expression_processed = expression_processed.replace(d[2],str(self.is_def(d[2])))
+    for dfd in defined:
+      expression_processed = expression_processed.replace(dfd[2],str(self.is_def(dfd[2])))
       expression_processed = re.sub(__regex_cpp_cond_defined_kwd__,'',expression_processed)
     # check for "or" and "and" operators
     expression_processed = expression_processed.replace('||',' or ')
@@ -207,14 +214,15 @@ class Macros(object):
     # expand macros
     expression_processed = self.expand(expression=expression_processed)
     try:
-      result = eval(expression_processed)
-    except:
+      result = ast.literal_eval(expression_processed)
+    except SyntaxError:
       print('Error: conditional expression not correctly evaluated!')
       print('Original expression: '+expression)
       print('Processed expression: '+expression_processed)
       self.list()
       sys.exit(1)
     return result
+
   def list(self):
     """
     Method for printing the list of macros.
@@ -227,19 +235,25 @@ class Macros(object):
     for key, val in self.dic.items():
       if val is None:
         print(key)
-  def get_from_CLI(self,climacros=[]):
+    return
+
+  def get_from_cli(self,climacros):
     """
     Method for getting macros defined from CLI.
     """
     if len(climacros)>0 :
-      for m in climacros:
-        self.dic[m.split('=')[0]]=m.split('=')[1]
+      for macro in climacros:
+        self.dic[macro.split('=')[0]]=macro.split('=')[1]
+    return
+
   def undef(self,macro_name=''):
     """
     Method for undefine a macro.
     """
     if macro_name != '':
       self.dic[macro_name]=None
+    return
+
 class State(object):
   """
   State is an object that handles the state of the current parsed line, their attributes and methods.
@@ -251,12 +265,16 @@ class State(object):
     self.action  = action
     self.scope   = scope
     self.include = include
-class Parsed_Line(object):
+    return
+
+class ParsedLine(object):
   """
-  Parsed_Line is an object that handles a parsed line, its attributes and methods.
+  ParsedLine is an object that handles a parsed line, its attributes and methods.
   """
   def __init__(self,line=''):
     self.line = line
+    return
+
   def preproc_check(self,macros,state,pfmdir):
     """
     Method for checking if line contains preprocessing directives.
@@ -356,6 +374,7 @@ class Parsed_Line(object):
     elif state.scope == 'omit':
       state.action = 'omit'
     return
+
   def parse(self,macros,state,pfmdir):
     """
     Method for parsing a line.
@@ -367,6 +386,7 @@ class Parsed_Line(object):
       return macros.expand(self.line)
     else:
       return None
+
 # functions definitions
 def preprocess_file(sfile,parsed_file,macros,state,pfmdir):
   """
@@ -378,39 +398,41 @@ def preprocess_file(sfile,parsed_file,macros,state,pfmdir):
   else:
     macros.set(macro='__FILE__',value=sfile)
     source_file = open(sfile,'r')
-    for l,line in enumerate(source_file):
-      macros.set(macro='__LINE__',value=str(l+1))
-      pline = Parsed_Line(line=line)
+    for lnn,line in enumerate(source_file):
+      macros.set(macro='__LINE__',value=str(lnn+1))
+      pline = ParsedLine(line=line)
       output = pline.parse(macros=macros,state=state,pfmdir=pfmdir)
       if output:
         if parsed_file:
           parsed_file.writelines(output)
         else:
-          print(output),
+          print(output,end='')
       elif state.action == 'include':
         state.action = 'print'
         preprocess_file(sfile=state.include,parsed_file=parsed_file,macros=macros,state=state,pfmdir=pfmdir)
     source_file.close()
   return
+
 def main():
   """
   Main function.
   """
   cliargs = __cliparser__.parse_args()
-  MACROS = Macros()
-  MACROS.get_from_CLI(climacros=cliargs.D)
-  PFMDIR = PFMdirective()
+  macros_ = Macros()
+  macros_.get_from_cli(climacros=cliargs.D)
+  pfmdir_ = PFMdirective()
   if cliargs.input:
     if cliargs.output:
-      PARSED_FILE = open(cliargs.output,'w')
+      parsed_file_ = open(cliargs.output,'w')
     else:
-      PARSED_FILE = None
-    STATE = State()
-    preprocess_file(sfile=cliargs.input,parsed_file=PARSED_FILE,macros=MACROS,state=STATE,pfmdir=PFMDIR)
+      parsed_file_ = None
+    state_ = State()
+    preprocess_file(sfile=cliargs.input,parsed_file=parsed_file_,macros=macros_,state=state_,pfmdir=pfmdir_)
     if cliargs.output:
-      PARSED_FILE.close()
+      parsed_file_.close()
     if cliargs.list_macros:
-      MACROS.list()
+      macros_.list()
+
 # main loop
 if __name__ == '__main__':
   main()
