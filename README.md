@@ -275,6 +275,9 @@ python PreForM.py ...
 Go to [Top](#top) or [Toc](#toc)
 ## <a name="versions"></a>Version History
 In the following the changelog of most important releases is reported.
+### v1.1.1 
+##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v1.1.1.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v1.1.1.tar.gz) one
+Partial Code Lint. Fully backward compatible.
 ### v1.1.0 
 ##### Download [ZIP](https://github.com/szaghi/PreForM/archive/v1.1.0.zip) ball or [TAR](https://github.com/szaghi/PreForM/archive/v1.1.0.tar.gz) one
 Add PyPI installation procedure. Strongly modify the project tree. Fully backward compatible.
