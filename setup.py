@@ -33,4 +33,3 @@ setup(name = __appname__,
                      'Environment :: Console',
                      'Intended Audience :: Developers',
                      'Topic :: Software Development :: Code Generators'])
-
