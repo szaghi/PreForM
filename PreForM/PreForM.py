@@ -19,7 +19,7 @@ import argparse
 __appname__ = "PreForM.py"
 __description__ = "PreForM.py, Preprocessor for Fortran poor Men"
 __long_description__ = "A very simple and stupid preprocessor for modern Fortran projects. PreForM.py supports the most used cpp pre-processing directives and provides advanced features typical of templating systems. Even if PreForM.py is currently Fortran-agnostic (it being usable within any programming languages) it is focused on Fortran programming language."
-__version__ = "v1.1.2"
+__version__ = "v1.1.3"
 __author__ = "Stefano Zaghi"
 __author_email__ = "stefano.zaghi@gmail.com"
 __license__ = "GNU General Public License v3 (GPLv3)"
