@@ -62,6 +62,7 @@ __predef_macro__ = {'__FILE__':'', '__LINE__':'', '__DATE__':__date__, '__TIME__
 # PreForM.py macros: template system
 __regex_pfm_kwd__ = "#PFM"
 __regex_pfm__ = re.compile(r"^(|\s*)#PFM\s+")
+
 # classes definitions
 class PFMdirective(object):
   """
@@ -96,6 +97,7 @@ class PFMdirective(object):
       #else:
         #exec(expr=cmd)
       return block
+
 class Macros(object):
   """
   Macros is an object that handles defined and non defined macros, their attributes and methods.
@@ -292,6 +294,7 @@ class ParsedLine(object):
           state.action = 'include'
           state.include = inc
         return
+
     # cpp conditional directives
     for key, val in __regexs_cpp_cond__.items():
       matching = re.search(val, self.line)
@@ -330,6 +333,7 @@ class ParsedLine(object):
           state.action = 'omit'
           state.scope = 'normal'
         return
+
     # PreForM.py directives
     if state.scope != 'omit':
       matching = re.search(__regex_pfm__, self.line)
@@ -355,6 +359,7 @@ class ParsedLine(object):
       if state.scope == 'for_block':
         pfmdir.add_to_block(line=self.line)
         return
+
     # directives not found
     state.action = 'print'
     if state.scope == 'print':
@@ -365,7 +370,7 @@ class ParsedLine(object):
 
   def parse(self, macros, state, pfmdir):
     """
-    Method for parsing a line.
+    Parse a line.
     """
     self.preproc_check(macros=macros, state=state, pfmdir=pfmdir)
     if state.action == 'include' or state.action == 'omit':
