@@ -16,7 +16,7 @@ __url__ = re.search(r'^__url__\s*=\s*"(.*)"', __source__, re.M).group(1)
 setup(name = __appname__,
       packages = ['PreForM'],
       py_modules = ['PreForM.PreForM'],
-      entry_points = {'console_scripts': ['PreForM = PreForM.PreForM:main']},
+      entry_points = {'console_scripts': ['PreForM.py = PreForM.PreForM:main']},
       package_data = {'': ['*.md']},
       install_requires = ['argparse'],
       version = __version__,
