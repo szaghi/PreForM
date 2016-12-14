@@ -1,0 +1,4 @@
+#PFM for t in ['foo1','foo2','foo3']:
+subroutine set$t($t)
+endsubroutine set$t
+#PFM endfor
