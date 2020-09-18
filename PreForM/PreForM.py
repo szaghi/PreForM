@@ -3,7 +3,6 @@
 PreForM.py, Preprocessor for Fortran poor Men
 """
 from __future__ import print_function
-import ast
 try:
   from datetime import datetime
   __now__ = datetime.now()
@@ -55,7 +54,8 @@ __regex_cpp_cond_defined__ = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][E
 __regex_cpp_cond_defined_kwd__ = re.compile(r"(?P<cpp_defined>[Dd][Ee][Ff][Ii][Nn][Ee][Dd])")
 __regexs_cpp_cond__ = {}
 for k, v in locals().items():
-  if re.match(r"^__regex_cpp_cond_.*__", k):
+  skip_cond = ['__regex_cpp_cond_defined__', '__regex_cpp_cond_defined_kwd__']
+  if re.match(r"^__regex_cpp_cond_.*__", k) and k not in skip_cond:
     __regexs_cpp_cond__[k] = v
 # pre-defined macros
 __predef_macro__ = {'__FILE__':'', '__LINE__':'', '__DATE__':__date__, '__TIME__':__time__}
@@ -204,8 +204,8 @@ class Macros(object):
     # expand macros
     expression_processed = self.expand(expression=expression_processed)
     try:
-      result = ast.literal_eval(expression_processed)
-    except SyntaxError:
+      result = eval(expression_processed.strip())
+    except:
       print('Error: conditional expression not correctly evaluated!')
       print('Original expression: '+expression)
       print('Processed expression: '+expression_processed)
